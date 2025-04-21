@@ -105,29 +105,29 @@ func main() {
 		}
 
 	case "build":
-		if len(os.Args) < 3 {
-			fmt.Println("Usage: mycli build <alias>")
+		if len(os.Args) < 4 {
+			fmt.Println("Usage: mycli build <alias> <target-folder>")
 			return
 		}
 		alias := os.Args[2]
+		target := os.Args[3]
+
 		src, ok := config.Aliases[alias]
 		if !ok {
 			fmt.Println("Alias not found:", alias)
 			return
 		}
 
-		cwd, _ := os.Getwd()
-		destDir := filepath.Join(cwd, alias)
-
-		if err := os.MkdirAll(destDir, 0755); err != nil {
+		// Make the target folder if it doesn't exist
+		if err := os.MkdirAll(target, 0755); err != nil {
 			fmt.Println("Failed to create target directory:", err)
 			return
 		}
 
-		if err := copyDir(src, destDir); err != nil {
+		if err := copyDir(src, target); err != nil {
 			fmt.Println("Failed to copy:", err)
 		} else {
-			fmt.Printf("Copied from %s to %s\n", src, destDir)
+			fmt.Printf("Copied from %s to %s\n", src, target)
 		}
 
 	case "dump":
